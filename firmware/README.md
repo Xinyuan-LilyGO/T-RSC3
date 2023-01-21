@@ -2,5 +2,5 @@
 
 [Flash Download Tool](https://www.espressif.com/en/support/download/other-tools)
 
-![](../image/Flash_Download.png)
+![Flash Download](../image/Flash_Download.png)
 
