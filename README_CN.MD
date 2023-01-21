@@ -1,6 +1,6 @@
 <h1 align = "center">🌟LILYGO T-RSC3</h1>
 
-## **English | [中文](./README_CN.MD)**
+## **中文 | [English](./README.md)**
 
 
 <h3 align = "left">快速开始:</h3>
