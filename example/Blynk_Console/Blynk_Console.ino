@@ -2,28 +2,11 @@
 
 /* Comment this out to disable prints and save space */
 #define BLYNK_PRINT Serial
-#define Serial232        Serial0
-#define Serial485        Serial1
-#define RS485_BAUD       9600
-#define RS232_BAUD       9600
-#define RS485_RX_PIN     3
-#define RS485_TX_PIN     10
-#define RS485_CON_PIN    5
-#define RS232_RX_PIN     1
-#define RS232_TX_PIN     0
-#define LED_PIN          4
-#define KEY_PIN          2
-#define BOOT_PIN         9
-#define NUMPIXELS        1
-#define DELAYVAL 1000 // Time (in milliseconds) to pause between pixels
-#define RS485_TX_ENABLE  HIGH
-#define RS485_RX_ENABLE  LOW
-
 
 /* Fill-in your Template ID (only if using Blynk.Cloud) */
-#define BLYNK_TEMPLATE_ID ""
-#define BLYNK_DEVICE_NAME ""
-#define BLYNK_AUTH_TOKEN ""
+#define BLYNK_TEMPLATE_ID       "****************************"
+#define BLYNK_TEMPLATE_NAME     "****************************"
+#define BLYNK_AUTH_TOKEN        "****************************"
 
 #include "Arduino.h"
 #include "HardwareSerial.h"
@@ -31,6 +14,7 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <BlynkSimpleEsp32.h>
+#include "utilities.h"
 
 bool RS485mode = true;
 static TaskHandle_t AppTaskCreate_Handle = NULL;

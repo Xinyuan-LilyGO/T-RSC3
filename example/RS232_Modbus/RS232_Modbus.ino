@@ -1,17 +1,10 @@
 #include "Arduino.h"
 #include <Adafruit_NeoPixel.h>
 #include <ModbusMaster.h>
-ModbusMaster node;
-#define Serial232        Serial1
-#define RS232_BAUD       9600
-#define KEY_PIN          2
-#define RS232_RX_PIN     1
-#define RS232_TX_PIN     0
-#define LED_PIN          4
-#define NUMPIXELS        1
+#include "utilities.h"
 
+ModbusMaster node;
 Adafruit_NeoPixel pixels(NUMPIXELS, LED_PIN, NEO_GRB + NEO_KHZ800);
-void RS485_Mode(int Mode);
 
 void setup()
 {

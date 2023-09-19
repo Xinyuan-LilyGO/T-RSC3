@@ -1,27 +1,8 @@
-
-
-#if CONFIG_FREERTOS_UNICORE
-#define ARDUINO_RUNNING_CORE 0
-#else
-#define ARDUINO_RUNNING_CORE 1
-#endif
-
 #include "Arduino.h"
 #include "HardwareSerial.h"
 #include <Adafruit_NeoPixel.h>
+#include "utilities.h"
 
-#define Serial485        Serial1
-#define RS485_BAUD       9600
-#define RS485_RX_PIN     3
-#define RS485_TX_PIN     10
-#define RS485_CON_PIN    5
-#define LED_PIN          4
-#define KEY_PIN          2
-#define BOOT_PIN         9
-#define NUMPIXELS        1
-#define DELAYVAL 1000 // Time (in milliseconds) to pause between pixels
-#define RS485_TX_ENABLE  HIGH
-#define RS485_RX_ENABLE  LOW
 
 Adafruit_NeoPixel pixels(NUMPIXELS, LED_PIN, NEO_GRB + NEO_KHZ800);
 bool RS485mode = true;
@@ -35,6 +16,7 @@ void setup()
 {
     Serial.begin(9600);
     pinMode(RS485_CON_PIN, OUTPUT);
+    pinMode(KEY_PIN, INPUT);
 
     pixels.begin();
     pixels.setBrightness(255);

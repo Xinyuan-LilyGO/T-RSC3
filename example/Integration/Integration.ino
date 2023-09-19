@@ -1,29 +1,7 @@
-#if CONFIG_FREERTOS_UNICORE
-#define ARDUINO_RUNNING_CORE 0
-#else
-#define ARDUINO_RUNNING_CORE 1
-#endif
-
 #include "Arduino.h"
 #include "HardwareSerial.h"
 #include <Adafruit_NeoPixel.h>
-
-#define Serial232        Serial0
-#define Serial485        Serial1
-#define RS485_BAUD       9600
-#define RS232_BAUD       9600
-#define RS485_RX_PIN     3
-#define RS485_TX_PIN     10
-#define RS485_CON_PIN    5
-#define RS232_RX_PIN     1
-#define RS232_TX_PIN     0
-#define LED_PIN          4
-#define KEY_PIN          2
-#define BOOT_PIN         9
-#define NUMPIXELS        1
-#define DELAYVAL 1000 // Time (in milliseconds) to pause between pixels
-#define RS485_TX_ENABLE  HIGH
-#define RS485_RX_ENABLE  LOW
+#include "utilities.h"
 
 String rs232_prefix_str = "RS232";
 
@@ -39,7 +17,9 @@ void colorWipe(uint32_t color, int wait);
 void setup()
 {
     Serial.begin(9600);
+
     pinMode(RS485_CON_PIN, OUTPUT);
+    pinMode(KEY_PIN, INPUT_PULLUP);
 
     pixels.begin();
     pixels.setBrightness(255);
@@ -51,34 +31,33 @@ void setup()
 
     RS485_Mode(RS485_RX_ENABLE);
 
-    xTaskCreatePinnedToCore(
+    xTaskCreate(
         TaskBlink
         ,  "TaskBlink"   // A name just for humans
-        ,  1024  // This stack size can be checked & adjusted by reading the Stack Highwater
+        ,   1024 * 10  // This stack size can be checked & adjusted by reading the Stack Highwater
         ,  NULL
-        ,  2  // Priorit
+        ,  10  // Priorit
         ,  NULL
-        ,  ARDUINO_RUNNING_CORE);
+    );
 
-    xTaskCreatePinnedToCore(
+    xTaskCreate(
         Task_RS485
         ,  "Task_RS485"
-        ,  1024  // Stack size
+        ,   1024 * 10  // Stack size
         ,  NULL
-        ,  1  // Priority
+        ,  11  // Priority
         ,  NULL
-        ,  ARDUINO_RUNNING_CORE);
+    );
 
 
-    xTaskCreatePinnedToCore(
+    xTaskCreate(
         Task_RS232
         ,  "Task_RS232"
-        ,  1024  // Stack size
+        ,  1024 * 10 // Stack size
         ,  NULL
-        ,  1  // Priority
+        ,  12  // Priority
         ,  NULL
-        ,  ARDUINO_RUNNING_CORE);
-
+    );
 }
 
 void loop()
@@ -123,12 +102,12 @@ void TaskBlink(void *pvParameters)  // This is a task.
 void Task_RS232(void *pvParameters)
 {
     (void) pvParameters;
-
     for (;;) {
         // while (Serial.available())
         //     Serial232.write(Serial.read());
-        while (Serial232.available())
+        while (Serial232.available()) {
             Serial.write(Serial232.read());
+        }
         vTaskDelay(10);
     }
 }
@@ -136,12 +115,13 @@ void Task_RS232(void *pvParameters)
 void Task_RS485(void *pvParameters)
 {
     (void) pvParameters;
-
     for (;;) {
         if (digitalRead(KEY_PIN) == 0) {
             vTaskDelay(100);
             if (digitalRead(KEY_PIN) == 0) {
-                while (digitalRead(KEY_PIN) == 0);
+                while (digitalRead(KEY_PIN) == 0) {
+                    delay(1);
+                };
                 RS485mode = !RS485mode;
                 digitalWrite(RS485_CON_PIN, RS485mode);
                 if (RS485mode) {
@@ -154,8 +134,9 @@ void Task_RS485(void *pvParameters)
 
         // while (Serial.available())
         //     Serial485.write(Serial.read());
-        while (Serial485.available())
+        while (Serial485.available()) {
             Serial.write(Serial485.read());
+        }
         vTaskDelay(10);
     }
 }

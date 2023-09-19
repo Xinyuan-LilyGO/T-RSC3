@@ -8,10 +8,7 @@
  */
 
 #include "Arduino.h"
-#define Serial232        Serial1
-#define RS485_BAUD       9600
-#define RS232_RX_PIN     1
-#define RS232_TX_PIN     0
+#include "utilities.h"
 
 uint32_t timestamp = 0;
 
@@ -26,8 +23,10 @@ void loop()
 {
     if (millis() > timestamp) {
         timestamp = millis() + 1000;
-        Serial232.print("Running ["); Serial.print(millis() / 1000); Serial.print("]");
+        Serial.print("Send ->"); Serial.println(millis());
+        Serial232.print("Running ["); Serial232.print(millis() / 1000); Serial232.println("]");
     }
-    while (Serial232.available())
+    while (Serial232.available()) {
         Serial.write(Serial232.read());
+    }
 }

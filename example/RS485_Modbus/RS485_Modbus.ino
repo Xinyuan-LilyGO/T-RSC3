@@ -1,19 +1,11 @@
 
 #include <ModbusMaster.h>
-ModbusMaster node;
 #include "Arduino.h"
 #include <Adafruit_NeoPixel.h>
+#include "utilities.h"
 
-#define Serial485        Serial1
-#define RS485_BAUD       9600
-#define KEY_PIN          2
-#define RS485_RX_PIN     3
-#define RS485_TX_PIN     10
-#define RS485_CON_PIN    5
-#define RS485_TX_ENABLE  HIGH
-#define RS485_RX_ENABLE  LOW
-#define LED_PIN          4
-#define NUMPIXELS        1
+ModbusMaster node;
+
 
 bool RS485mode = true;
 
@@ -24,6 +16,8 @@ void setup()
 {
     Serial.begin(9600);
     pinMode(RS485_CON_PIN, OUTPUT);
+    pinMode(KEY_PIN, INPUT_PULLUP);
+
     Serial485.begin(RS485_BAUD, SERIAL_8N1, RS485_RX_PIN, RS485_TX_PIN);
     // communicate with Modbus slave ID 2 over Serial (port 0)
     node.begin(2, Serial485);
